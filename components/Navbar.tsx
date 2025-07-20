@@ -2,12 +2,26 @@
 
 import { Button } from '@/components/ui/button';
 import { Code, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  useEffect(() => {
+    // Check for accessToken or refreshToken in cookies
+    const accessToken = Cookies.get('accessToken');
+    const refreshToken = Cookies.get('refreshToken');
+    setIsAuthenticated(!!accessToken || !!refreshToken);
+  }, []);
+
+  const handleSignIn = () => router.push('/login');
+  const handleGetStarted = () => router.push('/signup');
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
@@ -18,8 +32,7 @@ export default function Navbar() {
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-cyan-600 rounded-lg flex items-center justify-center">
               <Code className="w-5 h-5 text-white" aria-hidden="true" />
             </div>
-            <span className="text-xl font-bold text-white">ForgeAPI
-</span>
+            <span className="text-xl font-bold text-white">ForgeAPI</span>
           </div>
 
           {/* Desktop Navigation */}
@@ -40,12 +53,23 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800">
-              Sign In
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              Get Started
-            </Button>
+            {!isAuthenticated && (
+              <>
+                <Button
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white hover:bg-gray-800"
+                  onClick={handleSignIn}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={handleGetStarted}
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -94,21 +118,29 @@ export default function Navbar() {
               >
                 Docs
               </a>
-              <div className="pt-4 pb-2 space-y-2">
-                <Button
-                  variant="ghost"
-                  className="w-full text-gray-300 hover:text-white hover:bg-gray-800"
-                  onClick={toggleMenu}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={toggleMenu}
-                >
-                  Get Started
-                </Button>
-              </div>
+              {!isAuthenticated && (
+                <div className="pt-4 pb-2 space-y-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-gray-300 hover:text-white hover:bg-gray-800"
+                    onClick={() => {
+                      toggleMenu();
+                      handleSignIn();
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={() => {
+                      toggleMenu();
+                      handleGetStarted();
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -2,8 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-16 bg-slate-950 mt-4">
       {/* Background gradient */}
@@ -29,6 +31,7 @@ export default function Hero() {
           <Button 
             size="lg" 
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group"
+            onClick={() => router.push("/signup")}
           >
             Get Started for Free
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -38,6 +41,7 @@ export default function Hero() {
             size="lg" 
             variant="outline" 
             className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white px-8 py-6 text-lg rounded-lg"
+            onClick={() => router.push("/login")}
           >
             <Play className="mr-2 w-5 h-5" />
             View Demo
