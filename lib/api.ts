@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'https://fogeapi-backend.onrender.com/api';
+const API_BASE_URL = 'https://861db6fbddd3.ngrok-free.app/api';
 
 export async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
   let res = await fetch(`${API_BASE_URL}${url}`, {
