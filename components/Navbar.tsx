@@ -1,27 +1,33 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { Code, Menu, X } from 'lucide-react';
+import { Code, Menu, X, User, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+
+interface UserData {
+  message: string;
+  user: {
+    id: string;
+    email: string;
+    userName?: string;
+  };
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<UserData['user'] | null>(null);
   const router = useRouter();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  useEffect(() => {
-    // Check for accessToken or refreshToken in cookies
-    const accessToken = Cookies.get('accessToken');
-    const refreshToken = Cookies.get('refreshToken');
-    setIsAuthenticated(!!accessToken || !!refreshToken);
-  }, []);
+ 
 
   const handleSignIn = () => router.push('/login');
   const handleGetStarted = () => router.push('/signup');
+
+
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
@@ -53,22 +59,37 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            {!isAuthenticated && (
+            {!isAuthenticated ? (
               <>
-                <Button
-                  variant="ghost"
-                  className="text-gray-300 hover:text-white hover:bg-gray-800"
-                  onClick={handleSignIn}
-                >
+                <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800" onClick={handleSignIn}>
                   Sign In
                 </Button>
-                <Button
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={handleGetStarted}
-                >
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleGetStarted}>
                   Get Started
                 </Button>
               </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Button 
+                  variant="ghost" 
+                  className="text-gray-300 hover:text-white hover:bg-gray-800"
+                  onClick={() => router.push('/dashboard')}
+                >
+                  Dashboard
+                </Button>
+                <div className="flex items-center space-x-2 text-gray-300">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">{user?.userName || user?.email || 'User'}</span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="text-gray-300 hover:text-white border-emerald-600 hover:bg-emerald-600/10" 
+                  // onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
             )}
           </div>
 
@@ -118,7 +139,8 @@ export default function Navbar() {
               >
                 Docs
               </a>
-              {!isAuthenticated && (
+              
+              {!isAuthenticated ? (
                 <div className="pt-4 pb-2 space-y-2">
                   <Button
                     variant="ghost"
@@ -138,6 +160,34 @@ export default function Navbar() {
                     }}
                   >
                     Get Started
+                  </Button>
+                </div>
+              ) : (
+                <div className="pt-4 pb-2 space-y-2 border-t border-gray-700">
+                  <Button
+                    variant="ghost"
+                    className="w-full text-gray-300 hover:text-white hover:bg-gray-800"
+                    onClick={() => {
+                      toggleMenu();
+                      router.push('/dashboard');
+                    }}
+                  >
+                    Dashboard
+                  </Button>
+                  <div className="px-3 py-2 flex items-center space-x-2 text-gray-300">
+                    <User className="w-4 h-4" />
+                    <span className="text-sm">{user?.userName || user?.email || 'User'}</span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="w-full text-gray-300 hover:text-white border-emerald-600 hover:bg-emerald-600/10"
+                    onClick={() => {
+                      toggleMenu();
+                      // handleLogout();
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
                   </Button>
                 </div>
               )}

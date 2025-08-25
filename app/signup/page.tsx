@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { apiFetch } from "@/lib/api";
 import BrandLoader from "@/components/BrandLoader";
 
 export default function SignupPage() {
@@ -17,26 +16,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    setLoading(true); // Start loader
-    try {
-      await apiFetch("/user/registerUser", {
-        method: "POST",
-        body: JSON.stringify(form),
-      });
-      router.push("/login");
-    } catch (err: any) {
-      setError(err.message || "Signup failed");
-    } finally {
-      setLoading(false); // Stop loader
-    }
-  }
+
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
@@ -44,7 +24,7 @@ export default function SignupPage() {
         <BrandLoader size={56} />
       ) : (
         <form
-          onSubmit={handleSubmit}
+          // onSubmit={handleSubmit}
           className="bg-slate-900 p-8 rounded-lg shadow-xl border border-slate-800 w-full max-w-md"
         >
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Sign Up</h2>
