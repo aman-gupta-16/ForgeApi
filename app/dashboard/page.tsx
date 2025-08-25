@@ -58,13 +58,13 @@ export default function DashboardPage() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <BrandLoader size={56} />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+  //       <BrandLoader size={56} />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-slate-950">
