@@ -26,7 +26,7 @@ export default function BrandLoader({ size = 48 }: { size?: number }) {
           </linearGradient>
         </defs>
       </svg>
-      <span className="ml-3 text-emerald-400 font-bold text-lg">ß</span>
+      <span className="ml-3 text-emerald-400 font-bold text-lg"></span>
     </div>
   );
 }
