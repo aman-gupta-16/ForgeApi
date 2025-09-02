@@ -153,10 +153,17 @@ export default function CreateApiSchemaPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-950 via-slate-950 to-indigo-950 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 right-20 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 left-20 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/6 to-blue-500/6 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.8s' }} />
+      </div>
+      
+      <div className="content-max-width container-padding section-padding relative z-10">
         {/* Enhanced Page Header */}
-        <div className="mb-12">
+        <div className="mb-16 animate-fade-in">
           <Button
             variant="ghost"
             onClick={() => router.push("/dashboard")}
@@ -167,16 +174,18 @@ export default function CreateApiSchemaPage() {
           </Button>
           
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center">
-                <Code className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center gap-3 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center">
+                <Code className="w-8 h-8 text-indigo-400" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+              <h1 className="text-heading text-gradient-secondary">
                 API Schema Builder
               </h1>
             </div>
-            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-              Create custom API endpoints with your own data structure. Design schemas that match your exact needs.
+            <p className="text-subheading max-w-3xl mx-auto">
+              Create custom API endpoints with your own data structure. 
+              <br className="hidden md:block" />
+              Design schemas that match your exact needs.
             </p>
           </div>
         </div>
@@ -202,11 +211,11 @@ export default function CreateApiSchemaPage() {
         )}
 
         {/* Enhanced Create Schema Form */}
-        <Card className="mb-12 bg-gradient-to-br from-slate-900/80 to-slate-800/80 border-slate-700/60 backdrop-blur-sm shadow-2xl">
+        <Card className="mb-16 bg-slate-900/80 backdrop-blur-xl border-slate-700/60 shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 animate-slide-up">
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl text-white flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-                <Plus className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+                <Plus className="w-5 h-5 text-indigo-400" />
               </div>
               Create New API Schema
             </CardTitle>
@@ -255,7 +264,7 @@ export default function CreateApiSchemaPage() {
               
               <div className="space-y-4">
                 {fields.map((field, index) => (
-                  <div key={index} className="flex gap-3 items-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <div key={index} className="flex gap-3 items-center p-4 bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/60 hover:bg-slate-800/80 transition-all duration-200">
                     <div className="flex-1">
                       <Input
                         placeholder="Field name (e.g., name, email, age)"
@@ -322,18 +331,18 @@ export default function CreateApiSchemaPage() {
 
         {/* Enhanced Existing Schemas */}
         <div className="space-y-6">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-3">Your API Schemas</h2>
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-heading text-white mb-3">Your API Schemas</h2>
             <p className="text-slate-400 text-lg">Manage and test your created endpoints</p>
           </div>
 
           {loadingSchemas ? (
-            <div className="text-center py-12">
+            <div className="text-center py-16 animate-fade-in">
               <div className="w-16 h-16 border-4 border-slate-700 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4" />
               <p className="text-slate-400 text-lg">Loading your schemas...</p>
             </div>
           ) : !schemas?.userApis || schemas.userApis.length === 0 ? (
-            <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+            <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 animate-slide-up">
               <CardContent className="pt-16 pb-16 text-center">
                 <div className="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Database className="w-10 h-10 text-slate-500" />
@@ -346,10 +355,10 @@ export default function CreateApiSchemaPage() {
             </Card>
           ) : (
             <div className="grid gap-6">
-              {schemas.userApis.map((schema: any) => {
+              {schemas.userApis.map((schema: any, index: number) => {
                 const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}${schema.apiPath}/{count}`;
                 return (
-                  <Card key={schema._id} className="group bg-gradient-to-br from-slate-900/80 to-slate-800/80 border-slate-700/60 backdrop-blur-sm hover:border-slate-600/80 transition-all duration-300 hover:shadow-xl hover:shadow-slate-900/50">
+                  <Card key={schema._id} className="group bg-slate-900/80 backdrop-blur-xl border-slate-700/60 hover:border-slate-600/50 hover:bg-slate-900/90 hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <CardContent className="p-8">
                       <div className="space-y-6">
                         {/* Header */}
@@ -359,7 +368,7 @@ export default function CreateApiSchemaPage() {
                               <Code className="w-6 h-6 text-indigo-400" />
                             </div>
                             <div>
-                              <h3 className="text-xl font-semibold text-white group-hover:text-indigo-400 transition-colors">
+                              <h3 className="text-xl font-semibold text-white group-hover:text-gradient-primary transition-all duration-300">
                                 /api{schema.apiPath}
                               </h3>
                               <p className="text-slate-400 text-sm">
@@ -387,7 +396,7 @@ export default function CreateApiSchemaPage() {
                           <label className="text-sm font-medium text-slate-300">Schema Fields</label>
                           <div className="flex flex-wrap gap-2">
                             {Object.entries(schema.responseSchema).map(([key, value]) => (
-                              <div key={key} className="bg-slate-800/60 rounded-lg px-3 py-2 border border-slate-700/50">
+                              <div key={key} className="bg-slate-800/60 rounded-xl px-3 py-2 border border-slate-700/50 hover:border-slate-600/50 transition-colors duration-200">
                                 <span className="text-emerald-400 font-mono text-sm">{key}</span>
                                 <span className="text-slate-400 text-sm mx-2">:</span>
                                 <span className="text-blue-400 font-mono text-sm">{value as string}</span>
@@ -401,7 +410,7 @@ export default function CreateApiSchemaPage() {
                           <label className="text-sm font-medium text-slate-300">API Endpoint URL</label>
                           <div className="space-y-3">
                             <div className="flex items-center gap-3">
-                              <div className="flex-1 bg-slate-800/80 rounded-lg px-4 py-3 font-mono text-sm border border-slate-700/60">
+                              <div className="flex-1 bg-slate-800/80 rounded-xl px-4 py-3 font-mono text-sm border border-slate-700/60">
                                 <span className="text-slate-400">GET </span>
                                 <span className="text-white break-all">{url}</span>
                               </div>
@@ -409,7 +418,7 @@ export default function CreateApiSchemaPage() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleCopy(schema._id, url)}
-                                className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all duration-200 min-w-[100px]"
+                                className="btn-secondary min-w-[100px]"
                               >
                                 {copiedId === schema._id ? (
                                   <span className="flex items-center gap-2 text-emerald-500">
@@ -424,7 +433,7 @@ export default function CreateApiSchemaPage() {
                                 )}
                               </Button>
                             </div>
-                            <div className="bg-slate-800/60 rounded-lg p-4 border border-slate-700/50">
+                            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
                               <div className="flex items-start gap-2">
                                 <Link className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                                 <div className="text-sm text-slate-300">

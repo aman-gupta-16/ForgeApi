@@ -4,47 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Code, Menu, X, User, LogOut, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
-
-interface UserData {
-  id: string;
-  email: string;
-  userName?: string;
-}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserData | null>(null);
+  const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  // Load user from localStorage (after login)
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const storedUser = localStorage.getItem("user");
-
-    if (accessToken && storedUser) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
-    } else {
-      setIsAuthenticated(false);
-      setUser(null);
-    }
-  }, []);
-
   const handleSignIn = () => router.push("/login");
   const handleGetStarted = () => router.push("/signup");
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    setIsAuthenticated(false);
-    setUser(null);
-    router.push("/login");
+    logout();
   };
 
   const isActive = (path: string) => pathname === path;

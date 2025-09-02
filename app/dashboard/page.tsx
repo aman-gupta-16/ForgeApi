@@ -122,8 +122,14 @@ export default function DashboardPage() {
   // ✅ Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-950 to-purple-950 relative overflow-hidden flex items-center justify-center">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        </div>
+        
+        <div className="text-center relative z-10">
           <BrandLoader size={64} />
           <p className="mt-4 text-slate-400 text-lg">Loading your dashboard...</p>
         </div>
@@ -132,19 +138,26 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-950 to-purple-950 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-indigo-500/5 to-cyan-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+      </div>
+      
+      <div className="content-max-width container-padding section-padding relative z-10">
         {/* Enhanced Page Header */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center">
-              <Key className="w-6 h-6 text-white" />
+        <div className="text-center mb-16 animate-fade-in">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center">
+              <Key className="w-8 h-8 text-emerald-400" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+            <h1 className="text-heading text-gradient-secondary">
               API Keys Dashboard
             </h1>
           </div>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-subheading max-w-3xl mx-auto">
             Manage your API keys and monitor usage for seamless integration with ForgeAPI services
           </p>
         </div>
@@ -173,7 +186,7 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+          <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 hover:bg-slate-900/80 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
@@ -187,7 +200,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+          <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 hover:bg-slate-900/80 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center">
@@ -203,7 +216,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+          <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 hover:bg-slate-900/80 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
@@ -221,7 +234,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Enhanced Generate New API Key */}
-        <Card className="mb-12 bg-gradient-to-br from-slate-900/80 to-slate-800/80 border-slate-700/60 backdrop-blur-sm shadow-2xl">
+        <Card className="mb-12 bg-slate-900/80 backdrop-blur-xl border-slate-700/60 shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300">
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl text-white flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center">
@@ -283,7 +296,7 @@ export default function DashboardPage() {
           </div>
 
           {apiKeys.length === 0 ? (
-            <Card className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+            <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50">
               <CardContent className="pt-12 pb-12">
                 <div className="text-center">
                   <div className="w-20 h-20 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -306,7 +319,7 @@ export default function DashboardPage() {
           ) : (
             <div className="grid gap-6">
               {apiKeys.map((apiKey: ApiKey) => (
-                <Card key={apiKey._id} className="group bg-gradient-to-br from-slate-900/80 to-slate-800/80 border-slate-700/60 backdrop-blur-sm hover:border-slate-600/80 transition-all duration-300 hover:shadow-xl hover:shadow-slate-900/50">
+                <Card key={apiKey._id} className="group bg-slate-900/80 backdrop-blur-xl border-slate-700/60 hover:border-slate-600/80 hover:bg-slate-900/90 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10">
                   <CardContent className="p-8">
                     <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                       <div className="flex-1 space-y-4">
