@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Trash2, Plus, Check, Copy, Code, Database, Link, ArrowLeft, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { handleApiError, showToast } from "@/lib/toast-utils";
 
 const availableTypes = [
   "uuid",
@@ -71,10 +72,6 @@ export default function CreateApiSchemaPage() {
   const [apiPath, setApiPath] = useState("");
   const [fields, setFields] = useState([{ name: "", type: "string" }]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   const handleFieldChange = (index: number, key: string, value: string) => {
     const updated = [...fields];
@@ -95,12 +92,12 @@ export default function CreateApiSchemaPage() {
 
   const handleSubmit = async () => {
     if (!apiPath.trim()) {
-      setMessage({ type: "error", text: "Please enter an API path" });
+      showToast.error("Validation Error", "Please enter an API path");
       return;
     }
 
     if (fields.some(f => !f.name.trim())) {
-      setMessage({ type: "error", text: "Please fill in all field names" });
+      showToast.error("Validation Error", "Please fill in all field names");
       return;
     }
 
@@ -115,30 +112,20 @@ export default function CreateApiSchemaPage() {
       await createApiSchema(formData).unwrap();
       setApiPath("");
       setFields([{ name: "", type: "string" }]);
-      setMessage({ type: "success", text: "API schema created successfully!" });
+      showToast.success("Schema Created", "API schema created successfully!");
       refetch();
-      setTimeout(() => setMessage(null), 3000);
     } catch (err: any) {
-      setMessage({
-        type: "error",
-        text: err?.data?.message || "Failed to create API schema"
-      });
-      setTimeout(() => setMessage(null), 3000);
+      handleApiError(err, "Failed to create API schema");
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteSchema(id).unwrap();
-      setMessage({ type: "success", text: "Schema deleted successfully!" });
+      showToast.success("Schema Deleted", "Schema deleted successfully!");
       refetch();
-      setTimeout(() => setMessage(null), 3000);
     } catch (err: any) {
-      setMessage({
-        type: "error",
-        text: err?.data?.message || "Failed to delete schema"
-      });
-      setTimeout(() => setMessage(null), 3000);
+      handleApiError(err, "Failed to delete schema");
     }
   };
 
@@ -146,8 +133,10 @@ export default function CreateApiSchemaPage() {
     try {
       await navigator.clipboard.writeText(url);
       setCopiedId(id);
+      showToast.success("Copied!", "URL copied to clipboard");
       setTimeout(() => setCopiedId(null), 2000);
     } catch (error) {
+      showToast.error("Copy Failed", "Failed to copy to clipboard");
       console.error("Failed to copy to clipboard");
     }
   };
@@ -189,26 +178,6 @@ export default function CreateApiSchemaPage() {
             </p>
           </div>
         </div>
-
-        {/* Enhanced Alerts */}
-        {message && (
-          <div className="mb-8 animate-in slide-in-from-top-2 duration-300">
-            <div className={`p-4 rounded-xl border-2 ${
-              message.type === "success"
-                ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-                : "border-red-500/50 bg-red-500/10 text-red-400"
-            }`}>
-              <div className="flex items-center gap-2">
-                {message.type === "success" ? (
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                ) : (
-                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-                )}
-                {message.text}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Enhanced Create Schema Form */}
         <Card className="mb-16 bg-slate-900/80 backdrop-blur-xl border-slate-700/60 shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 animate-slide-up">

@@ -13,6 +13,11 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Debug logging for authentication state changes
+  useEffect(() => {
+    console.log('📊 Navbar: Auth state changed:', { isAuthenticated, user: user?.userName || user?.email });
+  }, [isAuthenticated, user]);
+
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleSignIn = () => router.push("/login");
@@ -55,6 +60,17 @@ export default function Navbar() {
               }`}></span>
             </Link>
             <Link 
+              href="/about" 
+              className={`text-slate-300 hover:text-white transition-all duration-300 hover:scale-105 relative group ${
+                isActive("/about") ? "text-white" : ""
+              }`}
+            >
+              About
+              <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300 ${
+                isActive("/about") ? "w-full" : "w-0 group-hover:w-full"
+              }`}></span>
+            </Link>
+            <Link 
               href="/docs" 
               className={`text-slate-300 hover:text-white transition-all duration-300 hover:scale-105 relative group ${
                 isActive("/docs") ? "text-white" : ""
@@ -66,16 +82,17 @@ export default function Navbar() {
               }`}></span>
             </Link>
             <Link 
-              href="/pricing" 
+              href="/contact" 
               className={`text-slate-300 hover:text-white transition-all duration-300 hover:scale-105 relative group ${
-                isActive("/pricing") ? "text-white" : ""
+                isActive("/contact") ? "text-white" : ""
               }`}
             >
-              Pricing
+              Contact
               <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300 ${
-                isActive("/pricing") ? "w-full" : "w-0 group-hover:w-full"
+                isActive("/contact") ? "w-full" : "w-0 group-hover:w-full"
               }`}></span>
             </Link>
+
             {isAuthenticated && (
               <Link 
                 href="/dashboard" 
@@ -166,6 +183,17 @@ export default function Navbar() {
                 Home
               </Link>
               <Link
+                href="/about"
+                className={`block px-4 py-3 rounded-lg transition-all duration-300 ${
+                  isActive("/about") 
+                    ? "text-white bg-blue-600/20 border border-blue-600/30" 
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                }`}
+                onClick={toggleMenu}
+              >
+                About
+              </Link>
+              <Link
                 href="/docs"
                 className={`block px-4 py-3 rounded-lg transition-all duration-300 ${
                   isActive("/docs") 
@@ -177,16 +205,17 @@ export default function Navbar() {
                 Documentation
               </Link>
               <Link
-                href="/pricing"
+                href="/contact"
                 className={`block px-4 py-3 rounded-lg transition-all duration-300 ${
-                  isActive("/pricing") 
+                  isActive("/contact") 
                     ? "text-white bg-blue-600/20 border border-blue-600/30" 
                     : "text-slate-300 hover:text-white hover:bg-slate-800/50"
                 }`}
                 onClick={toggleMenu}
               >
-                Pricing
+                Contact
               </Link>
+
               {isAuthenticated && (
                 <Link
                   href="/dashboard"

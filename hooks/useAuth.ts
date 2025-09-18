@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -21,6 +21,7 @@ export function useAuth() {
     user: null,
     isLoading: true,
   });
+  const [updateTrigger, setUpdateTrigger] = useState(0);
   const router = useRouter();
 
   // Function to check if token is expired
@@ -98,7 +99,7 @@ export function useAuth() {
   };
 
   // Function to clear authentication data
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
@@ -107,25 +108,37 @@ export function useAuth() {
       user: null,
       isLoading: false,
     });
-  };
+    // Force update trigger
+    setUpdateTrigger(prev => prev + 1);
+  }, []);
 
   // Function to set authentication data
-  const setAuth = (accessToken: string, refreshToken: string, user: User) => {
+  const setAuth = useCallback((accessToken: string, refreshToken: string, user: User) => {
+    console.log('🔄 Setting auth data:', { user });
+    
+    // Store in localStorage
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("user", JSON.stringify(user));
+    
+    // Update state immediately with a new object to force re-render
     setAuthState({
       isAuthenticated: true,
-      user,
+      user: { ...user },
       isLoading: false,
     });
-  };
+    
+    // Force update trigger to ensure components re-render
+    setUpdateTrigger(prev => prev + 1);
+    
+    console.log('✅ Auth state updated successfully');
+  }, []);
 
   // Function to logout
-  const logout = () => {
+  const logout = useCallback(() => {
     clearAuth();
     router.push("/login");
-  };
+  }, [clearAuth, router]);
 
   // Initialize authentication state
   useEffect(() => {
@@ -159,5 +172,6 @@ export function useAuth() {
     logout,
     validateAuth,
     clearAuth,
+    updateTrigger, // Include this to help with debugging
   };
 }

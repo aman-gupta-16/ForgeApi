@@ -6,14 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import BrandLoader from "@/components/BrandLoader";
 import { useRegisterUserMutation } from "@/lib/services/apiSlice";
 import { useAuth } from "@/hooks/useAuth";
 import RedirectIfAuthenticated from "@/components/RedirectIfAuthenticated";
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Code, AlertCircle, CheckCircle, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Code, CheckCircle, Sparkles, AlertCircle } from "lucide-react";
 import Link from "next/link";
-
+import { handleApiError, showToast } from "@/lib/toast-utils";
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -22,23 +21,31 @@ export default function SignupPage() {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     // Client-side validation
+    if (!form.userName.trim()) {
+      showToast.error("Validation Error", "Username is required");
+      return;
+    }
+    
+    if (!form.email.trim()) {
+      showToast.error("Validation Error", "Email is required");
+      return;
+    }
+    
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
+      showToast.error("Validation Error", "Passwords do not match");
       return;
     }
 
     if (form.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      showToast.error("Validation Error", "Password must be at least 6 characters long");
       return;
     }
 
@@ -46,11 +53,16 @@ export default function SignupPage() {
       const result = await registerUser(form).unwrap();
       console.log("✅ Registered:", result);
 
+      // Show success toast
+      showToast.success("Registration Successful!", "Your account has been created. Please sign in to continue.");
+
       // redirect to login after success
-      router.push("/login");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
     } catch (err: any) {
       console.error("❌ Register failed:", err);
-      setError(err?.data?.message || "Registration failed. Please try again.");
+      handleApiError(err, "Registration failed. Please try again.");
     }
   };
 
@@ -100,16 +112,6 @@ export default function SignupPage() {
             </CardHeader>
 
             <CardContent className="space-y-6 pb-8">
-              {/* Error Alert */}
-              {error && (
-                <Alert className="border-red-500/50 bg-red-500/10 animate-slide-up">
-                  <AlertCircle className="h-4 w-4 text-red-400" />
-                  <AlertDescription className="text-red-400">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
-
               {/* Features highlight */}
               {/* <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 space-y-2">
                 <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">

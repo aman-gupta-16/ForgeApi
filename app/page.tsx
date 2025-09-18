@@ -2,6 +2,7 @@
 
 import Hero from '@/components/Hero';
 import HowItWorks from '@/components/HowItWorks';
+import SimplePricing from '@/components/SimplePricing';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <div className="relative z-10">
         <Hero />
         <HowItWorks />
+        <SimplePricing />
       </div>
     </div>
   );

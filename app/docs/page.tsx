@@ -349,8 +349,8 @@ export default function DocsPage() {
                         <td className="px-4 py-3 text-sm text-slate-300">10/minute</td>
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 text-sm text-white">Premium</td>
-                        <td className="px-4 py-3 text-sm text-slate-300">Unlimited</td>
+                        <td className="px-4 py-3 text-sm text-white">Pro ($9/month)</td>
+                        <td className="px-4 py-3 text-sm text-slate-300">100,000</td>
                         <td className="px-4 py-3 text-sm text-slate-300">1000/minute</td>
                       </tr>
                     </tbody>

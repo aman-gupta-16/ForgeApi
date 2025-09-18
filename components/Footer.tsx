@@ -43,7 +43,7 @@ export default function Footer() {
             {/* Social Media Links */}
             <div className="flex items-center gap-3">
               <Link 
-                href="https://github.com" 
+                href="https://github.com/aman-gupta-16" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-300"
@@ -52,7 +52,7 @@ export default function Footer() {
                 <Github className="w-5 h-5" />
               </Link>
               <Link 
-                href="https://twitter.com" 
+                href="https://x.com/AmanGup52727388" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-300"
@@ -61,16 +61,7 @@ export default function Footer() {
                 <Twitter className="w-5 h-5" />
               </Link>
               <Link 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-300"
-                title="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </Link>
-              <Link 
-                href="mailto:hello@forgeapi.dev" 
+                href="mailto:aman.gupta.work.16@gmail.com" 
                 className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-300"
                 title="Email"
               >
@@ -91,14 +82,7 @@ export default function Footer() {
                   Documentation
                 </Link>
               </li>
-              <li>
-                <Link 
-                  href="/pricing" 
-                  className="text-slate-400 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Pricing
-                </Link>
-              </li>
+
               <li>
                 <Link 
                   href="/dashboard" 
@@ -124,14 +108,6 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/blog" 
-                  className="text-slate-400 hover:text-blue-400 transition-colors duration-300"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link 
                   href="/contact" 
                   className="text-slate-400 hover:text-blue-400 transition-colors duration-300"
                 >
@@ -149,10 +125,10 @@ export default function Footer() {
               © 2024 ForgeAPI. All rights reserved.
             </div>
             <div className="flex items-center gap-6 text-sm text-slate-400">
-              <Link href="/privacy" className="hover:text-blue-400 transition-colors duration-300">
+              <Link href="#" className="hover:text-blue-400 transition-colors duration-300">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-blue-400 transition-colors duration-300">
+              <Link href="#" className="hover:text-blue-400 transition-colors duration-300">
                 Terms of Service
               </Link>
             </div>

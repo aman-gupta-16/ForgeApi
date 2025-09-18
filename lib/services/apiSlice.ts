@@ -47,10 +47,28 @@ export const apiSlice = createApi({
       }),
     }),
 
+    // Forgot Password
+    forgotPassword: builder.mutation<any, { email: string }>({
+      query: (body) => ({
+        url: "/user/forgotPassword",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    // Reset Password
+    resetPassword: builder.mutation<any, { token: string; newPassword: string; confirmPassword: string }>({
+      query: (body) => ({
+        url: "/user/resetPassword",
+        method: "POST",
+        body,
+      }),
+    }),
+
     // Manually call refresh if you want
     refreshToken: builder.mutation<any, void>({
       query: () => ({
-        url: "/user/refreshToken",
+        url: "/user/refreshTokenApi",
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
@@ -71,7 +89,7 @@ export const apiSlice = createApi({
       query: () => "/apiKey/getAllApiKey",
     }),
 
-    generateApiKey: builder.mutation<any, { name?: string }>({
+    generateApiKey: builder.mutation<any, { name: string }>({
       query: (body) => ({
         url: "/apiKey/generateApiKey",
         method: "POST",
@@ -111,6 +129,8 @@ export const apiSlice = createApi({
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
   useRefreshTokenMutation,
   useGetProfileQuery,
   useGetApiKeysQuery,

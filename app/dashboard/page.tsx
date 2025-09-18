@@ -15,12 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Plus, Trash2, Key, Eye, EyeOff, Sparkles, Zap, BarChart3, Calendar, Activity } from "lucide-react";
 import BrandLoader from "@/components/BrandLoader";
+import { handleApiError, showToast } from "@/lib/toast-utils";
 
 // ✅ import your RTK Query hooks and types
 import {
   useGetApiKeysQuery,
   useGenerateApiKeyMutation,
   useDeleteApiKeyMutation,
+  useGetProfileQuery,
 } from "@/lib/services/apiSlice";
 
 export interface ApiKey {
@@ -40,6 +42,20 @@ export default function DashboardPage() {
   // 🔥 RTK Query hooks
   const { data, isLoading, refetch } = useGetApiKeysQuery("");
   const apiKeys = data?.apiKeys ?? [];
+  
+  // Get user profile for plan information
+  const { data: profileData } = useGetProfileQuery();
+  const userPlan = profileData?.user?.plan || 'free';
+  const isSubscribed = profileData?.user?.isSubscribed || false;
+  
+  // Plan limits
+  const planLimits = {
+    free: { maxKeys: 1, maxRequests: 1000 },
+    premium: { maxKeys: 10, maxRequests: 100000 }
+  };
+  
+  const currentLimit = planLimits[userPlan as keyof typeof planLimits] || planLimits.free;
+  const isAtKeyLimit = apiKeys.length >= currentLimit.maxKeys;
 
   const [generateApiKey] = useGenerateApiKeyMutation();
   const [deleteApiKey] = useDeleteApiKeyMutation();
@@ -49,19 +65,14 @@ export default function DashboardPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [newKeyName, setNewKeyName] = useState("");
   const [showKeys, setShowKeys] = useState<{ [key: string]: boolean }>({});
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   // ✅ Copy key
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setMessage({ type: "success", text: "API key copied to clipboard!" });
-      setTimeout(() => setMessage(null), 3000);
+      showToast.success("Copied!", "API key copied to clipboard");
     } catch (error) {
-      setMessage({ type: "error", text: "Failed to copy to clipboard" });
+      showToast.error("Copy Failed", "Failed to copy to clipboard");
     }
   };
 
@@ -86,17 +97,19 @@ export default function DashboardPage() {
 
   // ✅ Generate key handler
   const generateApiKeyHandler = async () => {
+    if (!newKeyName.trim()) {
+      showToast.error("Validation Error", "API key name is required");
+      return;
+    }
+    
     try {
       setGenerating(true);
-      await generateApiKey({ name: newKeyName }).unwrap();
+      await generateApiKey({ name: newKeyName.trim() }).unwrap();
       setNewKeyName("");
-      setMessage({ type: "success", text: "API key generated successfully!" });
+      showToast.success("Success!", "API key generated successfully");
       refetch();
     } catch (err: any) {
-      setMessage({
-        type: "error",
-        text: err?.data?.message || "Failed to generate API key",
-      });
+      handleApiError(err, "Failed to generate API key");
     } finally {
       setGenerating(false);
     }
@@ -107,13 +120,10 @@ export default function DashboardPage() {
     try {
       setDeleting(id);
       await deleteApiKey(id).unwrap();
-      setMessage({ type: "success", text: "API key deleted successfully!" });
+      showToast.success("Deleted!", "API key deleted successfully");
       refetch();
     } catch (err: any) {
-      setMessage({
-        type: "error",
-        text: err?.data?.message || "Failed to delete API key",
-      });
+      handleApiError(err, "Failed to delete API key");
     } finally {
       setDeleting(null);
     }
@@ -162,30 +172,29 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Enhanced Alerts */}
-        {message && (
+        {/* Plan Limits Warning */}
+        {isAtKeyLimit && userPlan === 'free' && (
           <div className="mb-8 animate-in slide-in-from-top-2 duration-300">
-            <Alert
-              className={`border-2 ${
-                message.type === "success"
-                  ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-                  : "border-red-500/50 bg-red-500/10 text-red-400"
-              }`}
-            >
-              <AlertDescription className="flex items-center gap-2">
-                {message.type === "success" ? (
-                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                ) : (
-                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-                )}
-                {message.text}
+            <Alert className="border-yellow-500/50 bg-yellow-500/10 text-yellow-400">
+              <AlertDescription className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                  <span>You've reached your free plan limit ({currentLimit.maxKeys} API key{currentLimit.maxKeys > 1 ? 's' : ''})</span>
+                </div>
+                <Button 
+                  size="sm" 
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                  onClick={() => router.push('/#pricing')}
+                >
+                  Upgrade to Pro
+                </Button>
               </AlertDescription>
             </Alert>
           </div>
         )}
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 hover:bg-slate-900/80 transition-all duration-300">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
@@ -193,8 +202,8 @@ export default function DashboardPage() {
                   <Key className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-400">Total API Keys</p>
-                  <p className="text-2xl font-bold text-white">{apiKeys.length}</p>
+                  <p className="text-sm text-slate-400">API Keys</p>
+                  <p className="text-2xl font-bold text-white">{apiKeys.length}/{currentLimit.maxKeys}</p>
                 </div>
               </div>
             </CardContent>
@@ -225,8 +234,34 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm text-slate-400">Total Usage</p>
                   <p className="text-2xl font-bold text-white">
-                    {apiKeys.reduce((sum: number, key: ApiKey) => sum + key.count, 0)}
+                    {apiKeys.reduce((sum: number, key: ApiKey) => sum + key.count, 0).toLocaleString()}
                   </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-slate-900/70 backdrop-blur-xl border-slate-700/50 hover:bg-slate-900/80 transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-indigo-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400">Plan</p>
+                  <p className="text-lg font-bold text-white capitalize">
+                    {userPlan === 'premium' ? 'Pro' : 'Free'}
+                  </p>
+                  {userPlan === 'free' && (
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      className="text-xs text-blue-400 hover:text-blue-300 p-0 h-auto"
+                      onClick={() => router.push('/#pricing')}
+                    >
+                      Upgrade →
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -258,13 +293,21 @@ export default function DashboardPage() {
               </div>
               <Button
                 onClick={generateApiKeyHandler}
-                disabled={generating || !newKeyName.trim()}
-                className="h-12 px-8 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={generating || !newKeyName.trim() || isAtKeyLimit}
+                className={`h-12 px-8 font-semibold text-lg rounded-xl shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isAtKeyLimit 
+                    ? 'bg-slate-600 text-slate-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white hover:shadow-emerald-500/25'
+                }`}
               >
                 {generating ? (
                   <div className="flex items-center gap-2">
                     <BrandLoader size={20} />
                     <span>Generating...</span>
+                  </div>
+                ) : isAtKeyLimit ? (
+                  <div className="flex items-center gap-2">
+                    <span>Limit Reached ({currentLimit.maxKeys})</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">

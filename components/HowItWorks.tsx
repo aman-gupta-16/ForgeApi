@@ -86,8 +86,8 @@ export default function HowItWorks() {
                   </div>
                   
                   {/* Icon container */}
-                  <div className={`w-24 h-24 bg-gradient-to-br ${step.bgColor} rounded-3xl flex items-center justify-center mx-auto mb-8 mt-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <step.icon className={`w-12 h-12 bg-gradient-to-r ${step.color} bg-clip-text text-transparent`} />
+                  <div className={`w-24 h-24 bg-gradient-to-br ${step.bgColor} rounded-3xl flex items-center justify-center mx-auto mb-8 mt-4 group-hover:scale-110 transition-transform duration-300 border border-slate-600/30`}>
+                    <step.icon className="w-12 h-12 text-blue-300" />
                   </div>
                   
                   {/* Content */}
@@ -102,7 +102,7 @@ export default function HowItWorks() {
                   <div className="space-y-3">
                     {step.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center gap-3 text-slate-400 justify-center">
-                        <CheckCircle className={`w-4 h-4 bg-gradient-to-r ${step.color} bg-clip-text text-transparent flex-shrink-0`} />
+                        <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                         <span className="text-sm font-medium">{feature}</span>
                       </div>
                     ))}

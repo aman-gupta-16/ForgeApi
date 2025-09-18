@@ -1,33 +1,46 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import BrandLoader from "@/components/BrandLoader";
 import { useLoginUserMutation } from "@/lib/services/apiSlice";
 import { useAuth } from "@/hooks/useAuth";
 import RedirectIfAuthenticated from "@/components/RedirectIfAuthenticated";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Code, AlertCircle, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Code, CheckCircle } from "lucide-react";
 import Link from "next/link";
-
+import { handleApiError, showToast } from "@/lib/toast-utils";
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setAuth } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
+  // Handle success messages from redirects
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message === 'password-reset-success') {
+      showToast.success("Password Reset Successful", "Your password has been updated. Please sign in with your new password.");
+      // Clear the URL parameter
+      router.replace('/login', undefined);
+    }
+  }, [searchParams, router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+
+    if (!form.email.trim() || !form.password.trim()) {
+      showToast.error("Validation Error", "Please enter both email and password");
+      return;
+    }
 
     try {
       const result = await loginUser(form).unwrap();
@@ -37,11 +50,19 @@ export default function LoginPage() {
       // Use the auth hook to set authentication data
       setAuth(result.accessToken, result.refreshToken, result.user);
 
-      // redirect to dashboard (or anywhere secure)
-      router.push("/dashboard");
+      console.log("🚀 Auth state updated, redirecting to dashboard...");
+      
+      // Show success toast
+      showToast.success("Welcome back!", `Successfully signed in as ${result.user.userName || result.user.email}`);
+      
+      // Small delay to ensure state update propagates
+      setTimeout(() => {
+        window.location.reload(); // reloads with cache
+        router.push("/dashboard");
+      }, 100);
     } catch (err: any) {
       console.error("❌ Login failed:", err);
-      setError(err?.data?.message || "Login failed. Please try again.");
+      handleApiError(err, "Login failed. Please try again.");
     }
   };
 
@@ -80,16 +101,6 @@ export default function LoginPage() {
             </CardHeader>
 
             <CardContent className="space-y-6 pb-8">
-              {/* Error Alert */}
-              {error && (
-                <Alert className="border-red-500/50 bg-red-500/10 animate-slide-up">
-                  <AlertCircle className="h-4 w-4 text-red-400" />
-                  <AlertDescription className="text-red-400">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
-
               {/* Login Form */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Email Field */}
