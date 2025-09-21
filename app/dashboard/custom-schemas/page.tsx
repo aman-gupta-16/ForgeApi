@@ -200,17 +200,17 @@ export default function CreateApiSchemaPage() {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-slate-400 text-sm">/api/</span>
+                  <span className="text-slate-400 text-sm">/</span>
                 </div>
                 <Input
                   placeholder="users, products, orders"
                   value={apiPath}
                   onChange={(e) => setApiPath(e.target.value)}
-                  className="pl-16 h-12 bg-slate-800/80 border-slate-600/60 text-white placeholder:text-slate-400 text-lg focus:border-indigo-500/60 focus:ring-indigo-500/20 transition-all duration-200"
+                  className="pl-5 h-12 bg-slate-800/80 border-slate-600/60 text-white placeholder:text-slate-400 text-lg focus:border-indigo-500/60 focus:ring-indigo-500/20 transition-all duration-200"
                 />
               </div>
               <p className="text-sm text-slate-500">
-                This will create an endpoint at: <code className="bg-slate-800 px-2 py-1 rounded text-emerald-400">/api/{apiPath || "your-path"}</code>
+                This will create an endpoint at: <code className="bg-slate-800 px-2 py-1 rounded text-emerald-400">/{apiPath || "your-path"}</code>
               </p>
             </div>
 
@@ -325,7 +325,7 @@ export default function CreateApiSchemaPage() {
           ) : (
             <div className="grid gap-6">
               {schemas.userApis.map((schema: any, index: number) => {
-                const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}/${schema.apiPath}/{count}`;
+                const url = `https://fogeapi-backend.onrender.com/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}/${schema.apiPath}/{count}`;
                 return (
                   <Card key={schema._id} className="group bg-slate-900/80 backdrop-blur-xl border-slate-700/60 hover:border-slate-600/50 hover:bg-slate-900/90 hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <CardContent className="p-8">

@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function DocsPage() {
   const [copied, setCopied] = useState(false);
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://fogeapi-backend.onrender.com";
   const exampleUrl = `${baseUrl}/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}/users/{count}`;
 
   const handleCopy = async () => {
