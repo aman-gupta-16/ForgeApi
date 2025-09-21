@@ -552,12 +552,11 @@ export default function DocsPage() {
             <footer className="border-t border-slate-700/50 pt-8 mt-16 animate-slide-up" style={{ animationDelay: '0.6s' }}>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-400">
-                  Need help? <a href="mailto:support@forgeapi.dev" className="text-blue-400 hover:text-blue-300 transition-colors">Contact support</a>
+                  Need help? <a href="mailto:aman.gupta.work.16@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors">Contact support</a>
                 </p>
                 <div className="flex gap-4 text-sm text-slate-400">
                   <a href="#" className="hover:text-slate-300 transition-colors">API Status</a>
                   <a href="#" className="hover:text-slate-300 transition-colors">Changelog</a>
-                  <a href="https://github.com/forgeapi" className="hover:text-slate-300 transition-colors">GitHub</a>
                 </div>
               </div>
             </footer>

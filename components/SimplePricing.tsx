@@ -24,7 +24,7 @@ export default function SimplePricing() {
     
     try {
       setLoading(true);
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8080";
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://fogeapi-backend.onrender.com/";
       
       const res = await axios.post(
         `${baseUrl}/api/payment/create-checkout-session`,

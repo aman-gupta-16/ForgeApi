@@ -66,7 +66,7 @@ export function useAuth() {
 
       // Try to refresh the token
       try {
-        const response = await fetch('http://localhost:8080/api/user/refreshTokenApi', {
+        const response = await fetch('https://fogeapi-backend.onrender.com/api/user/refreshTokenApi', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${refreshToken}`,

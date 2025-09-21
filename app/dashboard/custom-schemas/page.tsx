@@ -325,7 +325,7 @@ export default function CreateApiSchemaPage() {
           ) : (
             <div className="grid gap-6">
               {schemas.userApis.map((schema: any, index: number) => {
-                const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}${schema.apiPath}/{count}`;
+                const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dynamicApi/serveFakeApi/{YOUR_TOKEN_HERE}/${schema.apiPath}/{count}`;
                 return (
                   <Card key={schema._id} className="group bg-slate-900/80 backdrop-blur-xl border-slate-700/60 hover:border-slate-600/50 hover:bg-slate-900/90 hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <CardContent className="p-8">
@@ -338,7 +338,7 @@ export default function CreateApiSchemaPage() {
                             </div>
                             <div>
                               <h3 className="text-xl font-semibold text-white group-hover:text-gradient-primary transition-all duration-300">
-                                /api{schema.apiPath}
+                                /{schema.apiPath}
                               </h3>
                               <p className="text-slate-400 text-sm">
                                 {Object.keys(schema.responseSchema).length} fields defined
