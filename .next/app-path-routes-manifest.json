@@ -1,13 +1,13 @@
 {
   "/_not-found": "/_not-found",
   "/page": "/",
+  "/contact/page": "/contact",
   "/about/page": "/about",
+  "/docs/page": "/docs",
   "/forgot-password/page": "/forgot-password",
   "/login/page": "/login",
-  "/contact/page": "/contact",
   "/reset-password/page": "/reset-password",
   "/signup/page": "/signup",
-  "/docs/page": "/docs",
   "/dashboard/page": "/dashboard",
   "/dashboard/custom-schemas/page": "/dashboard/custom-schemas"
 }
